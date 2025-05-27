@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comprobante de Pago - Sistema de Nómina</title>
+  <link rel="stylesheet" href="../styles/main.css">
+  <link rel="stylesheet" href="../styles/employee.css">
+  <link rel="stylesheet" href="../styles/employee-receipt.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="../assets/logo.png" alt="Logo Parroquia San Francisco de Asís" class="sidebar-logo">
+        <h3>Sistema de Nómina</h3>
+      </div>
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="employee.html">
+              <span class="icon">📊</span>
+              <span>Resumen</span>
+            </a>
+          </li>
+          <li>
+            <a href="employee-payrolls.html">
+              <span class="icon">💰</span>
+              <span>Mis Nóminas</span>
+            </a>
+          </li>
+          <li class="active">
+            <a href="employee-receipts.html">
+              <span class="icon">🧾</span>
+              <span>Comprobantes</span>
+            </a>
+          </li>
+          <li class="sidebar-divider"></li>
+          <li>
+            <a href="employee-profile.html">
+              <span class="icon">👤</span>
+              <span>Mi Perfil</span>
+            </a>
+          </li>
+          <li>
+            <a href="../index.html" id="logout-link">
+              <span class="icon">🚪</span>
+              <span>Cerrar Sesión</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <p>© 2025 Parroquia San Francisco de Asís</p>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <div class="header-left">
+          <button id="sidebar-toggle" class="sidebar-toggle">☰</button>
+          <h1>Comprobante de Pago</h1>
+        </div>
+        <div class="header-right">
+          <div class="user-info">
+            <span id="user-name">Empleado</span>
+            <span class="user-role">Empleado</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Receipt Content -->
+      <div class="content-container">
+        <div class="receipt-container">
+          <div id="receipt-preview">
+            <div class="receipt-header">
+              <div class="organization-info">
+                <img src="../assets/logo.png" alt="Logo" class="receipt-logo">
+                <h1>Parroquia San Francisco de Asís</h1>
+                <p>NIT: 123456789-0</p>
+                <p>Calle Principal #123, Quibdó, Chocó</p>
+              </div>
+              <div class="receipt-title">
+                <h2>Comprobante de Pago</h2>
+                <p id="receipt-period">Período: -</p>
+              </div>
+            </div>
+
+            <div class="receipt-employee">
+              <h3>Información del Empleado</h3>
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="label">Nombre:</span>
+                  <span id="employee-name" class="value">-</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Documento:</span>
+                  <span id="employee-document" class="value">-</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Cargo:</span>
+                  <span id="employee-position" class="value">-</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Departamento:</span>
+                  <span id="employee-department" class="value">-</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="receipt-details">
+              <h3>Detalle de Pago</h3>
+              <div class="details-section">
+                <h4>Ingresos</h4>
+                <div class="detail-item">
+                  <span class="label">Salario Base:</span>
+                  <span id="base-salary" class="value">$0</span>
+                </div>
+                <div class="detail-item">
+                  <span class="label">Días Laborados:</span>
+                  <span id="worked-days" class="value">0</span>
+                </div>
+                <div class="detail-item">
+                  <span class="label">Horas Extra:</span>
+                  <span id="overtime" class="value">$0</span>
+                </div>
+                <div class="detail-item total">
+                  <span class="label">Total Devengado:</span>
+                  <span id="total-earned" class="value">$0</span>
+                </div>
+              </div>
+
+              <div class="details-section">
+                <h4>Deducciones</h4>
+                <div class="detail-item">
+                  <span class="label">Aporte Salud (4%):</span>
+                  <span id="health-deduction" class="value">$0</span>
+                </div>
+                <div class="detail-item">
+                  <span class="label">Aporte Pensión (4%):</span>
+                  <span id="pension-deduction" class="value">$0</span>
+                </div>
+                <div class="detail-item">
+                  <span class="label">Otras Deducciones:</span>
+                  <span id="other-deductions" class="value">$0</span>
+                </div>
+                <div class="detail-item total">
+                  <span class="label">Total Deducciones:</span>
+                  <span id="total-deductions" class="value">$0</span>
+                </div>
+              </div>
+
+              <div class="receipt-total">
+                <div class="total-item">
+                  <span class="label">Total a Pagar:</span>
+                  <span id="total-payment" class="value">$0</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="receipt-footer">
+              <p>Este comprobante ha sido generado automáticamente por el Sistema de Nómina</p>
+              <p>Fecha de emisión: <span id="issue-date">-</span></p>
+            </div>
+          </div>
+
+          <div class="receipt-actions">
+            <button id="download-receipt" class="primary-button">
+              <span class="icon">📥</span> Descargar PDF
+            </button>
+            <button id="print-receipt" class="secondary-button">
+              <span class="icon">🖨️</span> Imprimir
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="toast">
+    <div class="toast-content">
+      <span id="toast-message"></span>
+    </div>
+  </div>
+
+  <script src="../scripts/auth.js"></script>
+  <script src="../scripts/storage.js"></script>
+  <script src="../scripts/employee/receipt.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</body>
+</html>
