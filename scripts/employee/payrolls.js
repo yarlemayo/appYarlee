@@ -200,7 +200,9 @@ function loadPayrolls() {
     downloadButton.classList.add('action-button');
     downloadButton.innerHTML = '📥';
     downloadButton.title = 'Descargar comprobante';
-    downloadButton.addEventListener('click', () => downloadReceipt(item, payroll));
+    downloadButton.addEventListener('click', () => {
+      window.location.href = `employee-receipts.html?id=${item.id}`;
+    });
     
     actionButtons.appendChild(viewButton);
     actionButtons.appendChild(downloadButton);
@@ -294,35 +296,11 @@ function showPayrollDetail(payrollItem, payroll) {
     detailEventsElement.innerHTML = '<div class="text-center">No hay novedades en este período</div>';
   }
   
-  // Store payroll item ID for download
-  downloadReceiptButton.dataset.itemId = payrollItem.id;
+  // Set download link
+  downloadReceiptButton.href = `employee-receipts.html?id=${payrollItem.id}`;
   
   // Show modal
   detailModal.style.display = 'flex';
-}
-
-// Download receipt
-function downloadReceipt(payrollItem, payroll) {
-  const employee = window.Storage.getEmployees().find(emp => emp.id === currentUser.employeeId);
-  if (!employee) return;
-  
-  window.PDFGenerator.generatePayrollReceipt(payrollItem, employee, payroll)
-    .then(blob => {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `comprobante_${payroll.period.replace(/\s/g, '_')}_${employee.lastName}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      
-      showToast('Comprobante descargado exitosamente');
-    })
-    .catch(error => {
-      console.error('Error generating PDF:', error);
-      showToast('Error al generar el comprobante');
-    });
 }
 
 // Show toast notification
@@ -347,18 +325,6 @@ document.addEventListener('DOMContentLoaded', function() {
   // Handle modal close
   closeDetailButton.addEventListener('click', () => {
     detailModal.style.display = 'none';
-  });
-  
-  // Handle download from detail
-  downloadReceiptButton.addEventListener('click', function() {
-    const itemId = this.dataset.itemId;
-    const item = window.Storage.getPayrollItems().find(i => i.id === itemId);
-    if (!item) return;
-    
-    const payroll = window.Storage.getPayrollById(item.payrollId);
-    if (payroll) {
-      downloadReceipt(item, payroll);
-    }
   });
   
   // Close modal when clicking outside
