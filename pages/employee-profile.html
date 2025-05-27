@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Perfil - Sistema de Nómina</title>
+  <link rel="stylesheet" href="../styles/main.css">
+  <link rel="stylesheet" href="../styles/employee.css">
+  <link rel="stylesheet" href="../styles/employee-profile.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="../assets/logo.png" alt="Logo Parroquia San Francisco de Asís" class="sidebar-logo">
+        <h3>Sistema de Nómina</h3>
+      </div>
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="employee.html">
+              <span class="icon">📊</span>
+              <span>Resumen</span>
+            </a>
+          </li>
+          <li>
+            <a href="employee-payrolls.html">
+              <span class="icon">💰</span>
+              <span>Mis Nóminas</span>
+            </a>
+          </li>
+          <li>
+            <a href="employee-receipts.html">
+              <span class="icon">🧾</span>
+              <span>Comprobantes</span>
+            </a>
+          </li>
+          <li class="sidebar-divider"></li>
+          <li class="active">
+            <a href="employee-profile.html">
+              <span class="icon">👤</span>
+              <span>Mi Perfil</span>
+            </a>
+          </li>
+          <li>
+            <a href="../index.html" id="logout-link">
+              <span class="icon">🚪</span>
+              <span>Cerrar Sesión</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <p>© 2025 Parroquia San Francisco de Asís</p>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <div class="header-left">
+          <button id="sidebar-toggle" class="sidebar-toggle">☰</button>
+          <h1>Mi Perfil</h1>
+        </div>
+        <div class="header-right">
+          <div class="user-info">
+            <span id="user-name">Empleado</span>
+            <span class="user-role">Empleado</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Profile Content -->
+      <div class="content-container">
+        <div class="profile-container">
+          <!-- Personal Information -->
+          <div class="profile-section card">
+            <div class="card-header">
+              <h2>Información Personal</h2>
+            </div>
+            <div class="card-body">
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="label">Nombre Completo</span>
+                  <span id="full-name" class="value">-</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Documento</span>
+                  <span id="document" class="value">-</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Email</span>
+                  <span id="email" class="value">-</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Teléfono</span>
+                  <span id="phone" class="value">-</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Employment Information -->
+          <div class="profile-section card">
+            <div class="card-header">
+              <h2>Información Laboral</h2>
+            </div>
+            <div class="card-body">
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="label">Cargo</span>
+                  <span id="position" class="value">-</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Departamento</span>
+                  <span id="department" class="value">-</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Fecha de Ingreso</span>
+                  <span id="join-date" class="value">-</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Salario Base</span>
+                  <span id="base-salary" class="value">-</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bank Information -->
+          <div class="profile-section card">
+            <div class="card-header">
+              <h2>Información Bancaria</h2>
+            </div>
+            <div class="card-body">
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="label">Banco</span>
+                  <span id="bank-name" class="value">-</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Tipo de Cuenta</span>
+                  <span id="account-type" class="value">-</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Número de Cuenta</span>
+                  <span id="account-number" class="value">-</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="toast">
+    <div class="toast-content">
+      <span id="toast-message"></span>
+    </div>
+  </div>
+
+  <script src="../scripts/auth.js"></script>
+  <script src="../scripts/storage.js"></script>
+  <script src="../scripts/employee/profile.js"></script>
+</body>
+</html>

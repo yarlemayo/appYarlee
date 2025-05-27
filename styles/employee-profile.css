@@ -1,0 +1,88 @@
+/* Employee Profile Styles - Sistema de Nómina Parroquia San Francisco de Asís */
+
+.content-container {
+  padding: var(--spacing-lg);
+}
+
+.profile-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.profile-section {
+  margin-bottom: var(--spacing-lg);
+}
+
+.profile-section:last-child {
+  margin-bottom: 0;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-lg);
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.info-item .label {
+  font-size: var(--font-size-sm);
+  color: var(--gray-600);
+  font-weight: 500;
+}
+
+.info-item .value {
+  font-size: var(--font-size-md);
+  color: var(--gray-800);
+  padding: var(--spacing-sm);
+  background-color: var(--gray-100);
+  border-radius: var(--border-radius-sm);
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+/* Card Styles */
+.card {
+  background-color: var(--white);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.card-header {
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.card-header h2 {
+  margin: 0;
+  color: var(--primary);
+  font-size: var(--font-size-lg);
+}
+
+.card-body {
+  padding: var(--spacing-lg);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .card-header,
+  .card-body {
+    padding: var(--spacing-md);
+  }
+}
