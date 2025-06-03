@@ -116,139 +116,121 @@ function loadFilterOptions() {
   dateEndInput.value = lastDay.toISOString().split('T')[0];
 }
 
+// Generate sample data for demonstration
+function generateSampleData() {
+  return {
+    employees: [
+      {
+        name: "Juan Pérez",
+        department: "Administración",
+        salary: 1200000,
+        deductions: 96000,
+        net: 1104000
+      },
+      {
+        name: "María Rodríguez",
+        department: "Finanzas",
+        salary: 1800000,
+        deductions: 144000,
+        net: 1656000
+      },
+      {
+        name: "Carlos López",
+        department: "Pastoral",
+        salary: 1100000,
+        deductions: 88000,
+        net: 1012000
+      },
+      {
+        name: "Ana Martínez",
+        department: "Administración",
+        salary: 1050000,
+        deductions: 84000,
+        net: 966000
+      }
+    ],
+    departments: {
+      "Administración": { count: 2, total: 2070000 },
+      "Finanzas": { count: 1, total: 1656000 },
+      "Pastoral": { count: 1, total: 1012000 }
+    },
+    salaryTrend: {
+      "Julio 2023": { gross: 5150000, net: 4738000 },
+      "Agosto 2023": { gross: 5150000, net: 4738000 },
+      "Septiembre 2023": { gross: 5150000, net: 4738000 }
+    }
+  };
+}
+
 // Generate report
 function generateReport() {
-  const reportType = reportTypeSelect.value;
-  const selectedEmployee = employeeSelect.value;
-  const selectedPeriod = periodSelect.value;
-  const selectedDepartment = departmentSelect.value;
-  const startDate = dateStartInput.value;
-  const endDate = dateEndInput.value;
-
   // Show loading
   loadingOverlay.classList.remove('hide');
 
-  try {
-    // Get data
-    let payrollItems = window.Storage.getPayrollItems();
-    const payrolls = window.Storage.getPayrolls();
-    const employees = window.Storage.getEmployees();
+  setTimeout(() => {
+    try {
+      const sampleData = generateSampleData();
+      
+      // Update summary stats
+      totalEmployeesElement.textContent = sampleData.employees.length;
+      totalSalariesElement.textContent = formatCurrency(sampleData.employees.reduce((sum, emp) => sum + emp.salary, 0));
+      totalDeductionsElement.textContent = formatCurrency(sampleData.employees.reduce((sum, emp) => sum + emp.deductions, 0));
+      totalNetElement.textContent = formatCurrency(sampleData.employees.reduce((sum, emp) => sum + emp.net, 0));
 
-    // Filter by date range
-    payrollItems = payrollItems.filter(item => {
-      const payroll = payrolls.find(p => p.id === item.payrollId);
-      if (!payroll) return false;
-      return payroll.endDate >= startDate && payroll.startDate <= endDate;
-    });
+      // Update table
+      const tbody = reportTable.querySelector('tbody');
+      tbody.innerHTML = '';
 
-    // Apply filters
-    if (selectedEmployee) {
-      payrollItems = payrollItems.filter(item => item.employeeId === selectedEmployee);
-    }
+      sampleData.employees.forEach(emp => {
+        const row = document.createElement('tr');
+        
+        const nameCell = document.createElement('td');
+        nameCell.textContent = emp.name;
+        
+        const deptCell = document.createElement('td');
+        deptCell.textContent = emp.department;
+        
+        const periodCell = document.createElement('td');
+        periodCell.textContent = 'Septiembre 2023';
+        
+        const salaryCell = document.createElement('td');
+        salaryCell.textContent = formatCurrency(emp.salary);
+        
+        const extrasCell = document.createElement('td');
+        extrasCell.textContent = formatCurrency(0);
+        
+        const deductionsCell = document.createElement('td');
+        deductionsCell.textContent = formatCurrency(emp.deductions);
+        
+        const netCell = document.createElement('td');
+        netCell.textContent = formatCurrency(emp.net);
 
-    if (selectedPeriod) {
-      payrollItems = payrollItems.filter(item => {
-        const payroll = payrolls.find(p => p.id === item.payrollId);
-        return payroll && payroll.period === selectedPeriod;
+        row.appendChild(nameCell);
+        row.appendChild(deptCell);
+        row.appendChild(periodCell);
+        row.appendChild(salaryCell);
+        row.appendChild(extrasCell);
+        row.appendChild(deductionsCell);
+        row.appendChild(netCell);
+
+        tbody.appendChild(row);
       });
+
+      // Update charts
+      updateCharts(sampleData);
+
+    } catch (error) {
+      console.error('Error generating report:', error);
+      showToast('Error al generar el reporte');
+    } finally {
+      loadingOverlay.classList.add('hide');
     }
-
-    if (selectedDepartment) {
-      payrollItems = payrollItems.filter(item => {
-        const employee = employees.find(e => e.id === item.employeeId);
-        return employee && employee.department === selectedDepartment;
-      });
-    }
-
-    // Calculate totals
-    const uniqueEmployees = [...new Set(payrollItems.map(item => item.employeeId))];
-    const totalSalaries = payrollItems.reduce((sum, item) => sum + item.grossSalary, 0);
-    const totalDeductions = payrollItems.reduce((sum, item) => 
-      sum + item.healthDeduction + item.pensionDeduction + (item.otherDeductions || 0), 0);
-    const totalNet = payrollItems.reduce((sum, item) => sum + item.netSalary, 0);
-
-    // Update summary
-    totalEmployeesElement.textContent = uniqueEmployees.length;
-    totalSalariesElement.textContent = formatCurrency(totalSalaries);
-    totalDeductionsElement.textContent = formatCurrency(totalDeductions);
-    totalNetElement.textContent = formatCurrency(totalNet);
-
-    // Update table
-    const tbody = reportTable.querySelector('tbody');
-    tbody.innerHTML = '';
-
-    payrollItems.forEach(item => {
-      const employee = employees.find(e => e.id === item.employeeId);
-      const payroll = payrolls.find(p => p.id === item.payrollId);
-      
-      if (!employee || !payroll) return;
-
-      const row = document.createElement('tr');
-      
-      const employeeCell = document.createElement('td');
-      employeeCell.textContent = `${employee.firstName} ${employee.lastName}`;
-      
-      const departmentCell = document.createElement('td');
-      departmentCell.textContent = employee.department;
-      
-      const periodCell = document.createElement('td');
-      periodCell.textContent = payroll.period;
-      
-      const baseSalaryCell = document.createElement('td');
-      baseSalaryCell.textContent = formatCurrency(employee.salary);
-      
-      const extrasCell = document.createElement('td');
-      const extras = (item.overtime || 0) + (item.bonuses || 0);
-      extrasCell.textContent = formatCurrency(extras);
-      
-      const deductionsCell = document.createElement('td');
-      const deductions = item.healthDeduction + item.pensionDeduction + (item.otherDeductions || 0);
-      deductionsCell.textContent = formatCurrency(deductions);
-      
-      const netCell = document.createElement('td');
-      netCell.textContent = formatCurrency(item.netSalary);
-
-      row.appendChild(employeeCell);
-      row.appendChild(departmentCell);
-      row.appendChild(periodCell);
-      row.appendChild(baseSalaryCell);
-      row.appendChild(extrasCell);
-      row.appendChild(deductionsCell);
-      row.appendChild(netCell);
-
-      tbody.appendChild(row);
-    });
-
-    // Update charts
-    updateCharts(payrollItems, employees, payrolls);
-
-  } catch (error) {
-    console.error('Error generating report:', error);
-    showToast('Error al generar el reporte');
-  } finally {
-    loadingOverlay.classList.add('hide');
-  }
+  }, 1000); // Simulate loading time
 }
 
 // Update charts
-function updateCharts(payrollItems, employees, payrolls) {
+function updateCharts(data) {
   // Department distribution chart
-  const departmentData = {};
-  payrollItems.forEach(item => {
-    const employee = employees.find(e => e.id === item.employeeId);
-    if (!employee) return;
-
-    if (!departmentData[employee.department]) {
-      departmentData[employee.department] = {
-        count: 0,
-        total: 0
-      };
-    }
-
-    departmentData[employee.department].count++;
-    departmentData[employee.department].total += item.netSalary;
-  });
-
   const departmentCtx = departmentChart.getContext('2d');
   if (window.departmentChartInstance) {
     window.departmentChartInstance.destroy();
@@ -257,9 +239,9 @@ function updateCharts(payrollItems, employees, payrolls) {
   window.departmentChartInstance = new Chart(departmentCtx, {
     type: 'pie',
     data: {
-      labels: Object.keys(departmentData),
+      labels: Object.keys(data.departments),
       datasets: [{
-        data: Object.values(departmentData).map(d => d.total),
+        data: Object.values(data.departments).map(d => d.total),
         backgroundColor: [
           '#1a3a6c',
           '#2d5699',
@@ -284,33 +266,12 @@ function updateCharts(payrollItems, employees, payrolls) {
   });
 
   // Salary trend chart
-  const periodData = {};
-  payrollItems.forEach(item => {
-    const payroll = payrolls.find(p => p.id === item.payrollId);
-    if (!payroll) return;
-
-    if (!periodData[payroll.period]) {
-      periodData[payroll.period] = {
-        gross: 0,
-        net: 0
-      };
-    }
-
-    periodData[payroll.period].gross += item.grossSalary;
-    periodData[payroll.period].net += item.netSalary;
-  });
-
-  const periods = Object.keys(periodData).sort((a, b) => {
-    const dateA = payrolls.find(p => p.period === a).startDate;
-    const dateB = payrolls.find(p => p.period === b).startDate;
-    return new Date(dateA) - new Date(dateB);
-  });
-
   const salaryCtx = salaryTrendChart.getContext('2d');
   if (window.salaryChartInstance) {
     window.salaryChartInstance.destroy();
   }
 
+  const periods = Object.keys(data.salaryTrend);
   window.salaryChartInstance = new Chart(salaryCtx, {
     type: 'line',
     data: {
@@ -318,13 +279,13 @@ function updateCharts(payrollItems, employees, payrolls) {
       datasets: [
         {
           label: 'Salario Bruto',
-          data: periods.map(p => periodData[p].gross),
+          data: periods.map(p => data.salaryTrend[p].gross),
           borderColor: '#1a3a6c',
           tension: 0.1
         },
         {
           label: 'Salario Neto',
-          data: periods.map(p => periodData[p].net),
+          data: periods.map(p => data.salaryTrend[p].net),
           borderColor: '#c9a227',
           tension: 0.1
         }
@@ -438,7 +399,6 @@ function showToast(message, duration = 3000) {
 document.addEventListener('DOMContentLoaded', function() {
   // Load initial data
   loadFilterOptions();
-  generateReport();
 
   // Handle report type change
   reportTypeSelect.addEventListener('change', function() {
