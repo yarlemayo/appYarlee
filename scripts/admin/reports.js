@@ -95,8 +95,8 @@ function loadFilterOptions() {
     periodSelect.appendChild(option);
   });
 
-  // Load departments
-  const departments = [...new Set(employees.map(e => e.department))];
+  // Load departments (updated to only show Despacho and Cementerio)
+  const departments = ['Despacho', 'Cementerio'];
   departments.sort();
 
   departmentSelect.innerHTML = '<option value="">Todos los departamentos</option>';
@@ -122,37 +122,36 @@ function generateSampleData() {
     employees: [
       {
         name: "Juan Pérez",
-        department: "Administración",
+        department: "Despacho",
         salary: 1200000,
         deductions: 96000,
         net: 1104000
       },
       {
         name: "María Rodríguez",
-        department: "Finanzas",
+        department: "Cementerio",
         salary: 1800000,
         deductions: 144000,
         net: 1656000
       },
       {
         name: "Carlos López",
-        department: "Pastoral",
+        department: "Despacho",
         salary: 1100000,
         deductions: 88000,
         net: 1012000
       },
       {
         name: "Ana Martínez",
-        department: "Administración",
+        department: "Cementerio",
         salary: 1050000,
         deductions: 84000,
         net: 966000
       }
     ],
     departments: {
-      "Administración": { count: 2, total: 2070000 },
-      "Finanzas": { count: 1, total: 1656000 },
-      "Pastoral": { count: 1, total: 1012000 }
+      "Despacho": { count: 2, total: 2116000 },
+      "Cementerio": { count: 2, total: 2622000 }
     },
     salaryTrend: {
       "Julio 2023": { gross: 5150000, net: 4738000 },
@@ -244,10 +243,7 @@ function updateCharts(data) {
         data: Object.values(data.departments).map(d => d.total),
         backgroundColor: [
           '#1a3a6c',
-          '#2d5699',
-          '#0d2348',
-          '#c9a227',
-          '#e6be45'
+          '#2d5699'
         ]
       }]
     },
